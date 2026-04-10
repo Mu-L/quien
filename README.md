@@ -42,6 +42,11 @@ quien --json example.com
 - **Automatic retry** with exponential backoff on all lookups
 - **JSON subcommands** for scripting: `quien dns`, `quien mail`, `quien tls`, `quien http`, `quien stack`, `quien all`
 
+> **Tip:** If you want `quien` to replace your default WHOIS tool, you can add an alias to your shell config:
+> ```sh
+> alias whois=quien
+> ```
+
 ## Agent skill
 
 Add quien as a [agent skill](https://skills.sh/) so agents use it for domain and IP lookups:
