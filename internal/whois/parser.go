@@ -57,10 +57,13 @@ func Parse(raw string) model.DomainInfo {
 		info.Contacts = append(info.Contacts, tech)
 	}
 
-	// Clean up status values (remove URLs appended after space)
+	// Clean up status values (remove URLs appended after space, e.g. "clientDeleteProhibited https://...")
 	for i, s := range info.Status {
 		if idx := strings.Index(s, " "); idx != -1 {
-			info.Status[i] = s[:idx]
+			rest := strings.TrimSpace(s[idx+1:])
+			if strings.HasPrefix(rest, "http://") || strings.HasPrefix(rest, "https://") {
+				info.Status[i] = s[:idx]
+			}
 		}
 	}
 
