@@ -10,7 +10,7 @@ Set Theme "Catppuccin Mocha"
 Type "quien roots.io"
 Sleep 500ms
 Enter
-Sleep 3s
+Sleep 4s
 
 Type "d"
 Sleep 3s
@@ -33,6 +33,11 @@ Sleep 2s
 Type "r"
 Sleep 2s
 Type "r"
+Sleep 1s
+
+Type "i"
+Sleep 4s
+Type "w"
 Sleep 1s
 
 Type "q"
