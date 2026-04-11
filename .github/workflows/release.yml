@@ -147,12 +147,11 @@ jobs:
           EOF
 
       - name: Build signed apt repository
+        if: ${{ !contains(github.ref_name, '-') }}
         env:
           GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
         run: |
           mkdir -p aptrepo/pool/main/q/quien
-          mkdir -p aptrepo/dists/stable/main/binary-amd64
-          mkdir -p aptrepo/dists/stable/main/binary-arm64
 
           # Preserve history: pull existing pool (ignore failure on first run)
           rclone copy r2:quien-apt/pool ./aptrepo/pool || true
@@ -160,24 +159,20 @@ jobs:
           # Drop new .debs into the pool
           cp dist/*.deb ./aptrepo/pool/main/q/quien/
 
-          cat > apt-ftparchive.conf <<'CONF'
-          Dir {
-            ArchiveDir "./aptrepo";
-          };
-          Default {
-            Packages::Compress ". gzip";
-            Contents::Compress "gzip";
-          };
-          TreeDefault {
-            Directory "pool/$(SECTION)/q/quien";
-            Packages "dists/$(DIST)/$(SECTION)/binary-$(ARCH)/Packages";
-            Contents "dists/$(DIST)/$(SECTION)/Contents-$(ARCH)";
-          };
-          Tree "dists/stable" {
-            Sections "main";
-            Architectures "amd64 arm64";
-          };
-          CONF
+          # Generate per-arch Packages files. Running apt-ftparchive from
+          # inside aptrepo/ so the Filename: paths inside Packages are
+          # relative to the repo root (pool/main/...), which is what apt
+          # joins with the base URL.
+          for arch in amd64 arm64; do
+            mkdir -p "aptrepo/dists/stable/main/binary-$arch"
+            ( cd aptrepo && apt-ftparchive --arch "$arch" packages pool ) \
+              > "aptrepo/dists/stable/main/binary-$arch/Packages"
+            gzip -kf "aptrepo/dists/stable/main/binary-$arch/Packages"
+            if ! [ -s "aptrepo/dists/stable/main/binary-$arch/Packages" ]; then
+              echo "ERROR: Packages file for $arch is empty" >&2
+              exit 1
+            fi
+          done
 
           cat > apt-release.conf <<'CONF'
           APT::FTPArchive::Release::Origin "quien";
@@ -189,7 +184,6 @@ jobs:
           APT::FTPArchive::Release::Description "quien apt repository";
           CONF
 
-          apt-ftparchive generate apt-ftparchive.conf
           apt-ftparchive -c apt-release.conf release aptrepo/dists/stable > aptrepo/dists/stable/Release
 
           gpg --default-key "$GPG_KEY_ID" --batch --yes -abs \
