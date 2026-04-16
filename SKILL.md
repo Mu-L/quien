@@ -1,6 +1,6 @@
 ---
 name: quien
-description: Use the quien CLI for domain lookups, WHOIS, DNS, tech stack detection, and IP info. Activate when the user asks about a domain's owner, registrar, DNS records, mail config, SSL certificate, HTTP headers, tech stack, CMS, hosting, or IP address info.
+description: Use the quien CLI for domain and IP lookups: WHOIS/RDAP, DNS, mail authentication, TLS certificates, HTTP headers, SEO analysis, and tech stack detection. Activate when the user asks about a domain's owner, registrar, expiry, DNS records, mail config (SPF, DMARC, DKIM, BIMI), SSL certificate, HTTP headers, SEO, Core Web Vitals, tech stack, CMS, hosting, or IP address info (ASN, network, abuse contact).
 ---
 
 # quien — domain & IP lookup tool
@@ -25,11 +25,11 @@ quien tls example.com
 # HTTP headers, redirects, server info
 quien http example.com
 
-# Tech stack detection (CMS, frameworks, JS/CSS libraries, plugins)
-quien stack example.com
-
 # SEO analysis (indexability, on-page, structured data, Core Web Vitals)
 quien seo example.com
+
+# Tech stack detection (CMS, frameworks, JS/CSS libraries, plugins)
+quien stack example.com
 
 # Everything at once
 quien all example.com
@@ -50,8 +50,8 @@ All subcommands output JSON. Use `quien all` when you need a complete picture.
 | Email setup, SPF, DMARC, DKIM | `quien mail example.com` |
 | SSL certificate, expiry | `quien tls example.com` |
 | HTTP headers, redirects, server | `quien http example.com` |
-| Tech stack, CMS, framework | `quien stack example.com` |
 | SEO, Core Web Vitals | `quien seo example.com` |
+| Tech stack, CMS, framework | `quien stack example.com` |
 | Everything about a domain | `quien all example.com` |
 | IP owner, network, abuse contact | `quien whois 8.8.8.8` |
 

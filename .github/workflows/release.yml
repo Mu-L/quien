@@ -69,7 +69,7 @@ jobs:
 
           cat > homebrew-tap/Formula/quien.rb <<FORMULA
           class Quien < Formula
-            desc "A better WHOIS lookup tool with interactive TUI"
+            desc "A better whois and domain intelligence toolkit"
             homepage "https://github.com/${{ github.repository }}"
             version "$VERSION"
             license "MIT"

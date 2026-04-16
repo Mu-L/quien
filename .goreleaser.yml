@@ -29,7 +29,7 @@ nfpms:
     vendor: retlehs
     homepage: https://github.com/retlehs/quien
     maintainer: Ben Word <ben@benword.com>
-    description: A better WHOIS lookup tool with interactive TUI
+    description: A better whois and domain intelligence toolkit
     license: MIT
     formats:
       - deb

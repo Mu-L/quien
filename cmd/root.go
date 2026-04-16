@@ -19,8 +19,8 @@ var resolverFlag string
 
 var rootCmd = &cobra.Command{
 	Use:          "quien [domain or IP]",
-	Short:        "A better WHOIS lookup tool",
-	Long:         "quien queries WHOIS/RDAP information for a domain or IP address and displays it in a clean, readable format.",
+	Short:        "A better whois and domain intelligence toolkit",
+	Long:         "Inspect a domain or IP across registration (WHOIS/RDAP), DNS, mail authentication (SPF/DMARC/DKIM/BIMI), TLS, HTTP, SEO, and tech stack — interactive TUI by default, JSON via subcommands.",
 	Args:         cobra.MaximumNArgs(1),
 	SilenceUsage: true,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {

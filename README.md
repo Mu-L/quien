@@ -4,7 +4,7 @@
 ![GitHub release](https://img.shields.io/github/release/retlehs/quien?style=flat-square)
 ![GitHub downloads](https://img.shields.io/github/downloads/retlehs/quien/total?label=github%20downloads&style=flat-square)
 
-A better WHOIS lookup tool. Interactive TUI with tabbed views for WHOIS, DNS, mail, SSL/TLS, HTTP headers, tech stack detection, and SEO analysis.
+A better whois and domain intelligence toolkit. Interactive TUI with tabbed views for WHOIS, DNS, mail, SSL/TLS, HTTP headers, SEO analysis, and tech stack detection.
 
 ![quien demo](demo.gif)
 
@@ -45,9 +45,9 @@ go install github.com/retlehs/quien@latest
   - **BGP fallback** for origin ASN/prefix when RDAP does not include ASN data
   - **PeeringDB enrichment** for ASN context (network/org, peering policy, peering locations, traffic profile, IX/facility counts)
 - **Mail configuration audit** — MX, SPF, DMARC, DKIM, and BIMI with VMC chain validation
-- **Tech stack detection** including WordPress plugins, JS/CSS frameworks, and external services parsed from HTML
 - **SEO analysis** — indexability (robots.txt, canonical, sitemap), on-page (title, description, headings, images), structured data (JSON-LD, Open Graph, Twitter Cards), and performance hints (compression, caching, render-blocking resources)
   - **Core Web Vitals** — LCP, INP, CLS, FCP, and TTFB field data with historical trends via the CrUX API (optional)
+- **Tech stack detection** including WordPress plugins, JS/CSS frameworks, and external services parsed from HTML
 - **Automatic retry** with exponential backoff on all lookups
 - **JSON subcommands** for scripting: `quien whois`, `quien dns`, `quien mail`, `quien tls`, `quien http`, `quien seo`, `quien stack`, `quien all`
 
@@ -72,8 +72,8 @@ quien dns example.com
 quien mail example.com
 quien tls example.com
 quien http example.com
-quien stack example.com
 quien seo example.com
+quien stack example.com
 quien all example.com
 
 # Use a specific DNS resolver for this run
@@ -132,7 +132,7 @@ export QUIEN_RESOLVER=9.9.9.9
 ```
 
 > [!TIP]
-> If you want `quien` to replace your default WHOIS tool, you can add an alias to your shell config:
+> If you want `quien` to replace your default whois tool, you can add an alias to your shell config:
 > ```sh
 > alias whois=quien
 > ```
