@@ -583,12 +583,11 @@ func (m Model) contentForTab(t tab) string {
 
 func (m Model) View() tea.View {
 	if m.quitting {
+		// The final frame must leave AltScreen unset so Bubble Tea restores the terminal.
 		return tea.NewView("")
 	}
 	if !m.ready {
-		v := tea.NewView("\n  Loading...")
-		v.AltScreen = true
-		return v
+		return altView("\n  Loading...")
 	}
 
 	boxWidth := displayWidth
@@ -673,7 +672,11 @@ func (m Model) View() tea.View {
 	footerParts = append(footerParts, "q quit")
 	b.WriteString(footerStyle.Render(strings.Join(footerParts, "  •  ")))
 
-	v := tea.NewView(b.String())
+	return altView(b.String())
+}
+
+func altView(s string) tea.View {
+	v := tea.NewView(s)
 	v.AltScreen = true
 	return v
 }

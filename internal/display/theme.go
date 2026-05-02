@@ -4,6 +4,7 @@ import (
 	"image/color"
 	"os"
 	"strings"
+	"sync/atomic"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
@@ -19,8 +20,12 @@ const (
 
 var (
 	configuredTheme   = parseTheme(os.Getenv("QUIEN_THEME"))
-	hasDarkBackground = configuredTheme != themeLight
+	hasDarkBackground atomic.Bool
 )
+
+func init() {
+	hasDarkBackground.Store(configuredTheme != themeLight)
+}
 
 type adaptiveColor struct {
 	light color.Color
@@ -28,7 +33,7 @@ type adaptiveColor struct {
 }
 
 func (c adaptiveColor) RGBA() (uint32, uint32, uint32, uint32) {
-	if hasDarkBackground {
+	if hasDarkBackground.Load() {
 		return c.dark.RGBA()
 	}
 	return c.light.RGBA()
@@ -60,6 +65,6 @@ func backgroundColorCmd() tea.Cmd {
 
 func applyBackgroundColor(isDark bool) {
 	if configuredTheme == themeAuto {
-		hasDarkBackground = isDark
+		hasDarkBackground.Store(isDark)
 	}
 }
