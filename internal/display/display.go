@@ -3,11 +3,10 @@ package display
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"strings"
 	"time"
 
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 	"github.com/retlehs/quien/internal/model"
 )
 
@@ -37,22 +36,6 @@ func SetWidth(w int) {
 		w = 40
 	}
 	displayWidth = w
-}
-
-func init() {
-	switch strings.ToLower(os.Getenv("QUIEN_THEME")) {
-	case "light":
-		lipgloss.SetHasDarkBackground(false)
-	case "dark":
-		lipgloss.SetHasDarkBackground(true)
-	}
-	// "auto" or unset: lipgloss detects automatically.
-}
-
-// ac returns an AdaptiveColor that picks light on light backgrounds and dark
-// on dark backgrounds. lipgloss detects the terminal background automatically.
-func ac(light, dark string) lipgloss.AdaptiveColor {
-	return lipgloss.AdaptiveColor{Light: light, Dark: dark}
 }
 
 var (
