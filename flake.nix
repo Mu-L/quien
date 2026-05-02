@@ -17,8 +17,8 @@
             {buildGoModule}:
               buildGoModule (finalAttrs: {
                 pname = "quien";
-                version = "v0.7.2";
-                vendorHash = "sha256-q1HAlPIYe/nd5pYW+vZIABxfASlcFXhGNV71SY2ggsc=";
+                version = "0.8.0";
+                vendorHash = "sha256-/uizVtnbjkm4CTVxLECFeqBsBEue5vb7QALA+RbLmSc=";
                 src = ./.;
 
                 env.CGO_ENABLED = 0;
