@@ -45,6 +45,11 @@ func Parse(raw string) model.DomainInfo {
 	dnssec := strings.ToLower(firstValue(kv, "dnssec"))
 	info.DNSSEC = dnssec == "signeddelegation" || dnssec == "yes" || dnssec == "signed"
 
+	info.Extensions = extractExtensions(info.DomainName, kv)
+	if len(info.Extensions) > 0 {
+		info.ExtensionSection = extensionSection(info.DomainName)
+	}
+
 	// Extract contacts
 	registrant := extractContact(kv, "registrant", "registrant")
 	if registrant.Name != "" || registrant.Organization != "" || registrant.Email != "" {
