@@ -17,7 +17,7 @@
             {buildGoModule}:
               buildGoModule (finalAttrs: {
                 pname = "quien";
-                version = "0.8.1";
+                version = "0.9.0";
                 vendorHash = "sha256-/uizVtnbjkm4CTVxLECFeqBsBEue5vb7QALA+RbLmSc=";
                 src = ./.;
 
