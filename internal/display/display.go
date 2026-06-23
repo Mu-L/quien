@@ -294,45 +294,68 @@ func renderContact(c model.Contact) string {
 }
 
 func relativeTime(t time.Time) string {
-	now := time.Now()
-	diff := now.Sub(t)
+	return relativeTimeFrom(time.Now(), t)
+}
 
-	if diff < 0 {
-		diff = -diff
-		return formatDuration(diff) + " from now"
+// relativeTimeFrom labels t relative to now. Because dateRow shows only the
+// calendar date (YYYY-MM-DD), the today/yesterday/tomorrow labels are based on
+// the calendar-day difference rather than elapsed hours — otherwise a time less
+// than 24h away but on a different date would be mislabeled (e.g. a row reading
+// "2026-06-24  today" when it is still the 23rd).
+func relativeTimeFrom(now, t time.Time) string {
+	days := calendarDaysBetween(t, now) // positive when t is in the past
+	future := days < 0
+	if future {
+		days = -days
 	}
-	return formatDuration(diff) + " ago"
+	switch days {
+	case 0:
+		return "today"
+	case 1:
+		if future {
+			return "tomorrow"
+		}
+		return "yesterday"
+	}
+	d := formatDuration(time.Duration(days) * 24 * time.Hour)
+	if future {
+		return d + " from now"
+	}
+	return d + " ago"
+}
+
+// calendarDaysBetween returns the difference in calendar days between the civil
+// dates of t and now (positive when now is the later date). Each timestamp's
+// date is taken in its own location — matching what dateRow prints via
+// t.Format("2006-01-02") — then mapped to a UTC day index, so the count reflects
+// the displayed dates exactly regardless of time zone or DST.
+func calendarDaysBetween(t, now time.Time) int {
+	dayIndex := func(x time.Time) int {
+		y, m, d := x.Date()
+		return int(time.Date(y, m, d, 0, 0, 0, 0, time.UTC).Unix() / 86400)
+	}
+	return dayIndex(now) - dayIndex(t)
 }
 
 func formatDuration(d time.Duration) string {
 	days := int(d.Hours() / 24)
 
-	if days < 1 {
-		return "today"
-	}
-	if days == 1 {
-		return "1 day"
-	}
 	if days < 30 {
-		return fmt.Sprintf("%d days", days)
+		return plural(days, "day")
 	}
 	if days < 365 {
-		months := days / 30
-		if months == 1 {
-			return "1 month"
-		}
-		return fmt.Sprintf("%d months", months)
+		return plural(days/30, "month")
 	}
-	years := days / 365
-	remainingMonths := (days % 365) / 30
-	if years == 1 && remainingMonths == 0 {
-		return "1 year"
+	s := plural(days/365, "year")
+	if months := (days % 365) / 30; months > 0 {
+		s += ", " + plural(months, "month")
 	}
-	if remainingMonths == 0 {
-		return fmt.Sprintf("%d years", years)
+	return s
+}
+
+func plural(n int, unit string) string {
+	if n == 1 {
+		return "1 " + unit
 	}
-	if years == 1 {
-		return fmt.Sprintf("1 year, %d months", remainingMonths)
-	}
-	return fmt.Sprintf("%d years, %d months", years, remainingMonths)
+	return fmt.Sprintf("%d %ss", n, unit)
 }
