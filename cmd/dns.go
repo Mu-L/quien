@@ -3,9 +3,9 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	"github.com/retlehs/quien/internal/dns"
+	"github.com/retlehs/quien/internal/resolver"
 	"github.com/retlehs/quien/internal/retry"
 	"github.com/spf13/cobra"
 )
@@ -15,7 +15,10 @@ var dnsCmd = &cobra.Command{
 	Short: "DNS record lookup (JSON output)",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		domain := normalizeDomain(args[0])
+		domain, err := normalizeDomain(args[0])
+		if err != nil {
+			return err
+		}
 		records, err := retry.Do(func() (*dns.Records, error) {
 			return dns.Lookup(domain)
 		})
@@ -30,8 +33,8 @@ func init() {
 	rootCmd.AddCommand(dnsCmd)
 }
 
-func normalizeDomain(s string) string {
-	return strings.TrimSuffix(strings.ToLower(strings.TrimSpace(s)), ".")
+func normalizeDomain(s string) (string, error) {
+	return resolver.NormalizeDomain(s)
 }
 
 func printJSON(v any) error {
